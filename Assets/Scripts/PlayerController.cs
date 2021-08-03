@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class PlayerController : MonoBehaviour
 
     public SpriteRenderer sr;
     private Rigidbody rb;
+
+    private Vector3 input;
 
     // Start is called before the first frame update
     void Start()
@@ -18,35 +21,35 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
+        //Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
 
-       /*if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            sr.flipX = true;
-            //rb.AddForce(-transform.right * Time.deltaTime * speed);
-            rb.MovePosition(transform.position + -transform.right * Time.deltaTime * speed);
-            //transform.Translate(Vector3.left * Time.deltaTime * speed);
-        }
-        else if (Input.GetKey(KeyCode.RightArrow))
-        {
-            sr.flipX = false;
-            //rb.AddForce(transform.right * Time.deltaTime * speed);
-            rb.MovePosition(transform.position + transform.right * Time.deltaTime * speed);
-            //transform.Translate(Vector3.left * Time.deltaTime * -speed);
-        }
+        /*if (Input.GetKey(KeyCode.LeftArrow))
+         {
+             sr.flipX = true;
+             //rb.AddForce(-transform.right * Time.deltaTime * speed);
+             rb.MovePosition(transform.position + -transform.right * Time.deltaTime * speed);
+             //transform.Translate(Vector3.left * Time.deltaTime * speed);
+         }
+         else if (Input.GetKey(KeyCode.RightArrow))
+         {
+             sr.flipX = false;
+             //rb.AddForce(transform.right * Time.deltaTime * speed);
+             rb.MovePosition(transform.position + transform.right * Time.deltaTime * speed);
+             //transform.Translate(Vector3.left * Time.deltaTime * -speed);
+         }
 
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            //rb.AddForce(transform.forward * Time.deltaTime * speed);
-            rb.MovePosition(transform.position + transform.forward * Time.deltaTime * speed);
-            //transform.Translate(Vector3.forward * Time.deltaTime * speed);
-        }
-        else if (Input.GetKey(KeyCode.DownArrow))
-        {
-            //rb.AddForce(-transform.forward * Time.deltaTime * speed);
-            rb.MovePosition(transform.position + -transform.forward * Time.deltaTime * speed);
-            //transform.Translate(Vector3.forward * Time.deltaTime * -speed);
-        }*/
+         if (Input.GetKey(KeyCode.UpArrow))
+         {
+             //rb.AddForce(transform.forward * Time.deltaTime * speed);
+             rb.MovePosition(transform.position + transform.forward * Time.deltaTime * speed);
+             //transform.Translate(Vector3.forward * Time.deltaTime * speed);
+         }
+         else if (Input.GetKey(KeyCode.DownArrow))
+         {
+             //rb.AddForce(-transform.forward * Time.deltaTime * speed);
+             rb.MovePosition(transform.position + -transform.forward * Time.deltaTime * speed);
+             //transform.Translate(Vector3.forward * Time.deltaTime * -speed);
+         }*/
 
         if (input.x < 0.0f)
         {
@@ -58,5 +61,11 @@ public class PlayerController : MonoBehaviour
         }
 
         rb.MovePosition(transform.position + input * Time.deltaTime * speed);
+    }
+
+    public void OnMove(InputValue value)
+    {
+        Vector2 vec = value.Get<Vector2>();
+        input = new Vector3(vec.x, 0.0f, vec.y);
     }
 }
