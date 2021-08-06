@@ -15,18 +15,23 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 input;
     private List<Collider> triggersInRange;
+    private Collider closestTrigger;
+
+    private bool isFrozen;
 
     // Start is called before the first frame update
     void Start()
     {
         triggersInRange = new List<Collider>();
-
         rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (isFrozen)
+            return;
+
         if (input.x < 0.0f)
         {
             sr.flipX = true;
@@ -37,6 +42,24 @@ public class PlayerController : MonoBehaviour
         }
 
         rb.MovePosition(transform.position + input * Time.deltaTime * speed);
+
+        closestTrigger = null;
+
+        if (triggersInRange.Count > 0)
+        {
+            foreach (Collider c in triggersInRange)
+            {
+                if (Vector3.Dot(c.transform.position - transform.position, sr.flipX ? transform.right : -transform.right) > 0f)
+                {
+                    OnInteractableInRange?.Invoke(c.name);
+                    closestTrigger = c;
+                    break;
+                }
+            }
+
+            if (closestTrigger == null)
+                OnInteractableOutOfRange?.Invoke();
+        }
     }
 
     public void OnMove(InputValue value)
@@ -45,26 +68,16 @@ public class PlayerController : MonoBehaviour
         input = new Vector3(vec.x, 0.0f, vec.y);
     }
 
+    public void OnInteract()
+    {
+        if (closestTrigger != null)
+            closestTrigger.GetComponent<IInteractable>().OnInteract();
+    }
+
     public void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals("Interactable"))
             triggersInRange.Add(other);
-    }
-
-    public void OnTriggerStay(Collider other)
-    {
-        if (triggersInRange.Count > 0)
-        {
-            foreach (Collider c in triggersInRange)
-            {
-                if (Vector3.Dot(other.transform.position - transform.position, sr.flipX ? transform.right : -transform.right) > 0f)
-                {
-                    OnInteractableInRange?.Invoke(other.name);
-                    return;
-                }
-            }
-            OnInteractableOutOfRange?.Invoke();
-        }
     }
 
     public void OnTriggerExit(Collider other)
@@ -75,5 +88,15 @@ public class PlayerController : MonoBehaviour
             if (triggersInRange.Count == 0)
                 OnInteractableOutOfRange?.Invoke();
         }
+    }
+
+    public void Freeze()
+    {
+        isFrozen = true;
+    }
+
+    public void Unfreeze()
+    {
+        isFrozen = false;
     }
 }
