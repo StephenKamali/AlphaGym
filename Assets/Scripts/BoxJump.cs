@@ -5,17 +5,20 @@ using UnityEngine;
 public class BoxJump : Minigame
 {
     private bool isCharging;
+    private bool isPlaying;
 
     [SerializeField] private UnityEngine.UI.Image chargeFill;
 
     public override void StartMinigame()
     {
         base.OnMinigameStart();
+        isPlaying = true;
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        isPlaying = true;
         InputManager.OnInputChargeUpStart += ChargeStart;
         InputManager.OnInputChargeUpEnd += ChargeEnd;
     }
@@ -23,9 +26,12 @@ public class BoxJump : Minigame
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (isCharging)
+        if (isPlaying) //TODO - would be better if i could just disable this script?
         {
-            chargeFill.fillAmount += 0.5f * Time.fixedDeltaTime;
+            if (isCharging)
+            {
+                chargeFill.fillAmount += 0.5f * (chargeFill.fillAmount + 1.0f + (chargeFill.fillAmount * chargeFill.fillAmount * 5.0f)) * Time.fixedDeltaTime;
+            }
         }
     }
 
