@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class BoxJump : Minigame
 {
+    private bool isCharging;
+
+    [SerializeField] private UnityEngine.UI.Image chargeFill;
+
     public override void StartMinigame()
     {
         base.OnMinigameStart();
@@ -12,17 +16,29 @@ public class BoxJump : Minigame
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("begin!");
+        InputManager.OnInputChargeUpStart += ChargeStart;
+        InputManager.OnInputChargeUpEnd += ChargeEnd;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        if (isCharging)
+        {
+            chargeFill.fillAmount += 0.5f * Time.fixedDeltaTime;
+        }
     }
 
-    public void OnSpace()
+    private void ChargeStart()
     {
-        Debug.Log("Charge");
+        isCharging = true;
+        Debug.Log("charging start");
+    }
+
+    private void ChargeEnd()
+    {
+        isCharging = false;
+        chargeFill.fillAmount = 0.0f;
+        Debug.Log("charging end");
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,6 +21,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        InputManager.OnInputInteract += OnInteract;
+        InputManager.OnInputMove += OnMove;
         triggersInRange = new List<Collider>();
         rb = GetComponent<Rigidbody>();
     }
@@ -62,9 +63,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnMove(InputValue value)
+    public void OnMove(Vector2 vec)
     {
-        Vector2 vec = value.Get<Vector2>();
         input = new Vector3(vec.x, 0.0f, vec.y);
     }
 

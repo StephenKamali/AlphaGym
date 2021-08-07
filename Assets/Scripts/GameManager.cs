@@ -15,7 +15,6 @@ public class GameManager : MonoBehaviour
 
         foreach (Minigame m in minigames)
         {
-            Debug.Log("subscribed");
             m.MinigameStart += MinigameStarted;
             m.MinigameEnd += MinigameEnded;
         }
