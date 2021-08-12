@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
             sr.flipX = false;
         }
 
-        anim.SetBool("isWalking", input.x != 0.0f);
+        anim.SetBool("isWalking", input.x != 0.0f || input.z != 0.0f);
 
         rb.MovePosition(transform.position + input * Time.deltaTime * speed);
 
