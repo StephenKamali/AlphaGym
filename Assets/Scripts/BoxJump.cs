@@ -58,15 +58,19 @@ public class BoxJump : Minigame
 
     private void ChargeStart()
     {
-        isCharging = true;
+        if (!bjPlayer.IsJumping)
+            isCharging = true;
     }
 
     private void ChargeEnd()
     {
-        isCharging = false;
-        bjPlayer.Jump(chargeFill.fillAmount);
-        chargeFill.fillAmount = 0.0f;
-        triesText.text = "Tries Left - " + (--tries);
+        if (!bjPlayer.IsJumping)
+        {
+            isCharging = false;
+            bjPlayer.Jump(chargeFill.fillAmount);
+            chargeFill.fillAmount = 0.0f;
+            triesText.text = "Tries Left - " + (--tries);
+        }
     }
 
     private void OnJumpSuccess() //TODO - why not just consolidate Success and Fail into one event, OnJumpEnd(bool success)
