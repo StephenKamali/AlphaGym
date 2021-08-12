@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 input;
     private List<Collider> triggersInRange;
     private Collider closestTrigger;
+    private Animator anim;
 
     private bool isFrozen;
 
@@ -25,13 +26,17 @@ public class PlayerController : MonoBehaviour
         InputManager.OnInputMove += OnMove;
         triggersInRange = new List<Collider>();
         rb = GetComponent<Rigidbody>();
+        anim = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         if (isFrozen)
+        {
+            anim.SetBool("isWalking", false);
             return;
+        }
 
         if (input.x < 0.0f)
         {
@@ -41,6 +46,8 @@ public class PlayerController : MonoBehaviour
         {
             sr.flipX = false;
         }
+
+        anim.SetBool("isWalking", input.x != 0.0f);
 
         rb.MovePosition(transform.position + input * Time.deltaTime * speed);
 
