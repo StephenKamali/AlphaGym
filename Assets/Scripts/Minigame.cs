@@ -16,10 +16,12 @@ public abstract class Minigame : MonoBehaviour
     {
         MinigameStart?.Invoke();
         canvas.enabled = true;
+        enabled = true;
     }
     protected virtual void OnMinigameEnd()
     {
         MinigameEnd?.Invoke();
         canvas.enabled = false;
+        enabled = false;
     }
 }
